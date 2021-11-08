@@ -121,7 +121,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     repository: https://github.com/eclipse-che/che-operator
     support: Eclipse Foundation
-  name: eclipse-che-preview-kubernetes.v7.38.0-327.next
+  name: eclipse-che-preview-kubernetes.v7.39.0-328.next
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -1071,7 +1071,7 @@ spec:
                       - name: RELATED_IMAGE_devfile_registry
                         value: quay.io/eclipse/che-devfile-registry:next
                       - name: RELATED_IMAGE_che_tls_secrets_creation_job
-                        value: quay.io/eclipse/che-tls-secret-creator:alpine-d1ed4ad
+                        value: quay.io/eclipse/che-tls-secret-creator:alpine-01a4c34
                       - name: RELATED_IMAGE_pvc_jobs
                         value: registry.access.redhat.com/ubi8-minimal:8.4-212
                       - name: RELATED_IMAGE_postgres
@@ -1381,4 +1381,4 @@ spec:
   maturity: stable
   provider:
     name: Eclipse Foundation
-  version: 7.38.0-327.next
+  version: 7.39.0-328.next
