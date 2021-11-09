@@ -371,7 +371,7 @@ func TestCaseAutoDetectOAuth(t *testing.T) {
 
 			r := NewReconciler(
 				deployContext.ClusterAPI.Client,
-				deployContext.ClusterAPI.NonCachedClient,
+				deployContext.ClusterAPI.NonCachingClient,
 				deployContext.ClusterAPI.DiscoveryClient,
 				deployContext.ClusterAPI.Client.Scheme(),
 				"")
@@ -747,9 +747,9 @@ func TestCheController(t *testing.T) {
 	}
 
 	clusterAPI := deploy.ClusterAPI{
-		Client:          r.client,
-		NonCachedClient: r.client,
-		Scheme:          r.Scheme,
+		Client:           r.client,
+		NonCachingClient: r.client,
+		Scheme:           r.Scheme,
 	}
 
 	deployContext := &deploy.DeployContext{

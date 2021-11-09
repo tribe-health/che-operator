@@ -133,7 +133,7 @@ func TestIsTrustedBundleConfigMap(t *testing.T) {
 				newTestObject.ObjectMeta.Labels = testCase.objLabels
 			}
 
-			isEclipseCheObj, req := IsTrustedBundleConfigMap(deployContext.ClusterAPI.NonCachedClient, testCase.watchNamespace, newTestObject)
+			isEclipseCheObj, req := IsTrustedBundleConfigMap(deployContext.ClusterAPI.NonCachingClient, testCase.watchNamespace, newTestObject)
 
 			assert.Equal(t, testCase.expectedIsEclipseCheObj, isEclipseCheObj)
 			if isEclipseCheObj {
@@ -224,7 +224,7 @@ func TestIsEclipseCheRelatedObj(t *testing.T) {
 			deployContext := deploy.GetTestDeployContext(nil, testCase.initObjects)
 
 			testObject.ObjectMeta.Namespace = testCase.objNamespace
-			isEclipseCheObj, req := IsEclipseCheRelatedObj(deployContext.ClusterAPI.NonCachedClient, testCase.watchNamespace, testObject)
+			isEclipseCheObj, req := IsEclipseCheRelatedObj(deployContext.ClusterAPI.NonCachingClient, testCase.watchNamespace, testObject)
 
 			assert.Equal(t, testCase.expectedIsEclipseCheObj, isEclipseCheObj)
 			if isEclipseCheObj {
