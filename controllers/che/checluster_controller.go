@@ -102,8 +102,8 @@ func NewReconciler(
 	reconcileManager := deploy.NewReconcileManager()
 
 	// order does matter
-	reconcileManager.RegisterReconciler(migration.NewMigrator())
 	if !util.IsTestMode() {
+		reconcileManager.RegisterReconciler(migration.NewMigrator())
 		reconcileManager.RegisterReconciler(NewCheClusterValidator())
 	}
 	reconcileManager.RegisterReconciler(imagepuller.NewImagePuller())
