@@ -35,7 +35,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/selection"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -97,6 +96,10 @@ var (
 
 const (
 	leasesApiResourceName = "leases"
+)
+
+var (
+	cheFlavor = os.Getenv("CHE_FLAVOR")
 )
 
 func init() {
@@ -351,11 +354,12 @@ func main() {
 }
 
 func getCacheFunc() (cache.NewCacheFunc, error) {
-	cheInstanceRequirement, err := labels.NewRequirement(deploy.KubernetesInstanceLabelKey, selection.Equals, []string{os.Getenv("CHE_FLAVOR")})
-	if err != nil {
-		return nil, err
-	}
-	cheObjectSelector := labels.NewSelector().Add(*cheInstanceRequirement)
+	// cheInstanceRequirement, err := labels.NewRequirement(deploy.KubernetesInstanceLabelKey, selection.Equals, []string{os.Getenv("CHE_FLAVOR")})
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// cheObjectSelector := labels.NewSelector().Add(*cheInstanceRequirement)
+	cheObjectSelector := getObjectSelectorForCacheFunction()
 
 	logrus.Infof("Limit cache by selector: %s", cheObjectSelector.String())
 
@@ -403,4 +407,50 @@ func getCacheFunc() (cache.NewCacheFunc, error) {
 	return cache.BuilderWithOptions(cache.Options{
 		SelectorsByObject: selectors,
 	}), nil
+}
+
+func getObjectSelectorForCacheFunction() labels.Selector {
+	return CheObjectsSelector{}
+}
+
+type CheObjectsSelector struct {
+	labels.Selector
+}
+
+func (cos CheObjectsSelector) Matches(lbls labels.Labels) bool {
+	if lbls.Has(deploy.KubernetesPartOfLabelKey) && lbls.Get(deploy.KubernetesPartOfLabelKey) == deploy.CheEclipseOrg {
+		return true
+	}
+
+	if lbls.Has(deploy.KubernetesInstanceLabelKey) && lbls.Get(deploy.KubernetesInstanceLabelKey) == cheFlavor {
+		return true
+	}
+
+	return false
+}
+
+func (cos CheObjectsSelector) Empty() bool {
+	return false
+}
+
+func (cos CheObjectsSelector) String() string {
+	return fmt.Sprintf("%s=%s,%s=%s", deploy.KubernetesPartOfLabelKey, deploy.CheEclipseOrg, deploy.KubernetesInstanceLabelKey, cheFlavor)
+}
+
+func (cos CheObjectsSelector) Add(r ...labels.Requirement) labels.Selector {
+	// The selector cannot be changed
+	// panic ?
+	return cos
+}
+
+func (cos CheObjectsSelector) Requirements() (requirements labels.Requirements, selectable bool) {
+	return []labels.Requirement{}, true
+}
+
+func (cos CheObjectsSelector) DeepCopySelector() labels.Selector {
+	return cos
+}
+
+func (cos CheObjectsSelector) RequiresExactMatch(label string) (value string, found bool) {
+	return "", false
 }

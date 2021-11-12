@@ -42,6 +42,10 @@ func OnStartMigration(nonCachingClient client.Client) bool {
 // Returns true if everything is updated without errors, false otherwise.
 func migrateCheResourcesLabels(nonCachingClient client.Client) bool {
 	noErrors := true
+	// TODO ==============
+	if noErrors {
+		return false
+	}
 
 	// Prepare selector
 	partOfCheSelectorRequirement, err := labels.NewRequirement(deploy.KubernetesPartOfLabelKey, selection.Equals, []string{deploy.CheEclipseOrg})

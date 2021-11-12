@@ -181,9 +181,10 @@ func addRequiredLabelsForObject(ctx *deploy.DeployContext, objectName string, co
 	if labels == nil {
 		labels = make(map[string]string)
 	}
-	for labelName, labelValue := range deploy.GetLabels(ctx.CheCluster, componentName) {
-		labels[labelName] = labelValue
-	}
+	// for labelName, labelValue := range deploy.GetLabels(ctx.CheCluster, componentName) {
+	// 	labels[labelName] = labelValue
+	// }
+	labels[deploy.KubernetesPartOfLabelKey] = deploy.CheEclipseOrg
 	obj.SetLabels(labels)
 	if err := ctx.ClusterAPI.NonCachingClient.Update(context.TODO(), obj); err != nil {
 		return err
